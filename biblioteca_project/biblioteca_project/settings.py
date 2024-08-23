@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'biblioteca_app',
-    'django_filters'
+    'django_filters',
+    'corsheaders'
 ]
 
 # Para poder ajustar los filtros de los modelos en la API REST, se debe agregar la aplicación django_filters a la lista de aplicaciones:
@@ -69,6 +70,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
 ]
 
 ROOT_URLCONF = 'biblioteca_project.urls'
