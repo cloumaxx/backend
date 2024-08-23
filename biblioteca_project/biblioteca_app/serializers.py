@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from biblioteca_app.models import Libro, Rol, Usuario
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class LibroSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +37,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
-        
+
     def create(self, validated_data):
         # Extraemos los datos del User
         user_data = validated_data.pop('user')
@@ -46,4 +47,12 @@ class UsuarioSerializer(serializers.ModelSerializer):
         usuario = Usuario.objects.create(user=user, **validated_data)
         return usuario
 
-# proceso de login 
+
+class MyTokenSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Añadir datos personalizados al token
+        token['username'] = user.username
+        token['email'] = user.email
+        return token
