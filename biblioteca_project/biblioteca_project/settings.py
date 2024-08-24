@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +28,7 @@ SECRET_KEY = 'django-insecure-(veve!9hn^&q(xduw0#pr6i8@zs1jn$ldo32x1(^*xzzqrc-+o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['biblioteca-project-app.herokuapp.com']
 
 
 # Application definition
@@ -99,16 +101,21 @@ WSGI_APPLICATION = 'biblioteca_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bibliotecaDB',
         'USER': 'postgres',
         'PASSWORD': '123',
-        'HOST': 'localhost',  # O la IP de tu servidor de base de datos si no está en la misma máquina
-        'PORT': '5432',       # Puerto por defecto para PostgreSQL
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+# Configuración de la base de datos para el entorno de producción en Heroku
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
