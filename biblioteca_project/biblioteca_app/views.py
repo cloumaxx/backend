@@ -95,3 +95,28 @@ class LoginView(APIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.user
+        tokens = serializer.validated_data
+
+        try:
+            usuario = user.usuario
+
+            user_data = {
+                'id': usuario.id,
+                'nombre': usuario.nombre,
+                'email': usuario.email,
+                'rol': usuario.rol.nombre,
+                'lista_libros': [libro.titulo for libro in usuario.lista_libros.all()]
+            }
+        except Usuario.DoesNotExist:
+            user_data = {}
+        response_data = {
+            'access': tokens['access'],
+            'refresh': tokens['refresh'],
+            'user': user_data
+        }
+        return Response(response_data)

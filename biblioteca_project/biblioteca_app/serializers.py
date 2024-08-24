@@ -52,7 +52,15 @@ class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # Añadir datos personalizados al token
-        token['username'] = user.username
-        token['email'] = user.email
+        # Acceder al modelo Usuario relacionado con el usuario autenticado
+        try:
+            usuario = user.usuario
+            token['id'] = usuario.id
+            token['nombre'] = usuario.nombre
+            token['email'] = usuario.email
+            token['rol'] = usuario.rol.nombre
+            token['lista_libros'] = [libro.titulo for libro in usuario.lista_libros.all()]
+        except Usuario.DoesNotExist:
+            # Manejar el caso donde el usuario no tenga un perfil Usuario
+            pass
         return token

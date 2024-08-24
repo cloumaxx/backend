@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 class Libro(models.Model):
     titulo = models.CharField(max_length=100)
     autor = models.CharField(max_length=100)
-    año_publicacion = models.IntegerField()
+    anno_publicacion = models.IntegerField()
     cantidad_stock = models.IntegerField()
     def __str__(self):
-        return self.titulo+" "+self.autor+" "+str(self.año_publicacion)+" "+str(self.cantidad_stock)
+        return self.titulo+" "+self.autor+" "+str(self.anno_publicacion)+" "+str(self.cantidad_stock)
     
 class Rol(models.Model):
     nombre = models.CharField(max_length=50)
@@ -16,6 +16,7 @@ class Rol(models.Model):
         return self.nombre
     
 class Usuario(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
     email = models.EmailField()
