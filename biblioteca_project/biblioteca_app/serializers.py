@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from biblioteca_app.models import Libro, Rol, Usuario
+from biblioteca_app.models import Libro, Prestamo, Rol, Usuario
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class LibroSerializer(serializers.ModelSerializer):
@@ -13,6 +13,12 @@ class RolSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rol
         fields = '__all__'
+
+class PrestamoSerializer(serializers.ModelSerializer):
+    libro = LibroSerializer()
+    class Meta:
+        model = Prestamo
+        fields = fields = ['id', 'fecha_prestamo', 'fecha_devolucion', 'libro', 'usuario']
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -34,6 +40,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
     lista_libros = LibroSerializer(many=True, read_only=True)
     lista_roles = RolSerializer(many=True, read_only=True)
     rol = serializers.PrimaryKeyRelatedField(queryset=Rol.objects.all(), write_only=True)
+
     class Meta:
         model = Usuario
         fields = '__all__'

@@ -14,7 +14,7 @@ class Rol(models.Model):
     nombre = models.CharField(max_length=50)
     def __str__(self):
         return self.nombre
-    
+
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,3 +25,13 @@ class Usuario(models.Model):
     
     def __str__(self):
         return self.nombre + " " + self.email + " " + self.rol.nombre+ " " + self.lista_libros.all()
+    
+class Prestamo(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_prestamo = models.DateField()
+    fecha_devolucion = models.DateField(null=True, blank=True)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE, related_name='prestamos')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='prestamos')
+    
+    def __str__(self):
+        return str(self.fecha_prestamo) + " " + str(self.fecha_devolucion) + " " + self.libro.titulo + " " + self.usuario.nombre
