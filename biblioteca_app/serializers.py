@@ -28,6 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
     def create(self, validated_data):
+        """
+        La función `create` crea un nuevo objeto usuario utilizando los datos validados proporcionados.
+        """
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -58,6 +61,10 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
+        """
+        La función `get_token` recupera información del usuario y datos relacionados para generar un token para
+        autenticación.
+        """
         token = super().get_token(user)
         # Acceder al modelo Usuario relacionado con el usuario autenticado
         try:

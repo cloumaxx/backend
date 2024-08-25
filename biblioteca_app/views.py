@@ -12,17 +12,25 @@ from biblioteca_app.serializers import LibroSerializer, MyTokenSerializer, Prest
 
 # Create your views here.
 
+# Esta clase define un conjunto de vistas para el modelo Libro con un conjunto de consultas que recupera todos los objetos Libro
+# ordenados por su id y una clase serializadora para serializar objetos Libro.
 class LibroViewSet(viewsets.ModelViewSet):
     queryset = Libro.objects.all().order_by('id')
     serializer_class = LibroSerializer
-
-    @action(detail=False, methods=['get'])
+    """
+        Esta función recupera y devuelve una lista de libros disponibles con existencias superiores a cero.
+    """
+    @action(detail=False, methods=['get'])     
     def libros_disponibles(self, request):
         libros = self.queryset.filter(cantidad_stock__gt=0)
         serializer = self.get_serializer(libros, many=True)
         return Response(serializer.data)
     
-    @action(detail=True, methods=['patch'])
+        """
+        Esta función permite a un usuario tomar prestado un libro si está disponible en stock y asociarlo a su cuenta.
+        
+        """
+    @action(detail=True, methods=['patch'])   
     def prestar_libro(self, request, pk=None):
         try:
             libro = self.get_object()  
@@ -47,6 +55,11 @@ class LibroViewSet(viewsets.ModelViewSet):
         except Libro.DoesNotExist:
             return Response({"detail": "Libro no encontrado"}, status=status.HTTP_404_NOT_FOUND)
     
+    """
+        Esta función gestiona el proceso de devolución de un libro por parte de un usuario, la actualización de la lista de libros del usuario
+        y la cantidad en stock del libro.
+        
+    """
     @action(detail=True, methods=['patch'])
     def devolver_libro(self, request, pk=None):
         try:
@@ -82,8 +95,10 @@ class RolViewSet(viewsets.ModelViewSet):
 class PrestamoViewSet(viewsets.ModelViewSet):
     queryset = Prestamo.objects.all().order_by('id')
     serializer_class = PrestamoSerializer
-
-    @action(detail=False, methods=['get'])
+    """
+        Esta función recupera una lista de préstamos para un usuario específico basándose en el user_id proporcionado.
+    """
+    @action(detail=False, methods=['get']) 
     def prestamos_por_usuario(self, request):
         usuario_id = request.query_params.get('usuario_id')
         if not usuario_id:
@@ -97,6 +112,10 @@ class PrestamoViewSet(viewsets.ModelViewSet):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class RegistroView(APIView):
+    """
+        Esta función de Python crea un nuevo usuario validando y guardando los datos de usuario proporcionados en la
+        solicitud.
+    """
     def post(self, request):
         serializer = UsuarioSerializer(data=request.data)  
         if serializer.is_valid():
@@ -109,6 +128,10 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        Esta función procesa una solicitud POST, valida los datos, recupera la información del usuario y sus
+        libros asociados, y devuelve una respuesta con tokens de acceso y datos de usuario.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.user
