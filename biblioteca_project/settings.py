@@ -77,7 +77,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
+    "http://localhost:4200","https://front-biblioteca-037db10caa89.herokuapp.com/"
 ]
 
 ROOT_URLCONF = 'biblioteca_project.urls'
