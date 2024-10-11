@@ -4,7 +4,7 @@
 Bienvenido al repositorio del proyecto de Biblioteca. Este proyecto es una aplicación web desarrollada con Angular que interactúa con una API construida con Django. La aplicación permite gestionar libros y préstamos, proporcionando una interfaz intuitiva para los usuarios.
 
 # Descripción
-Este proyecto es parte de una prueba técnica para el puesto de Desarrollador de Software Django.
+Este proyecto realizado en Django.
 
 
 
